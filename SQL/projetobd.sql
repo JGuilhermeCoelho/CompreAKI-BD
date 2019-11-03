@@ -7,8 +7,8 @@ CREATE SEQUENCE Solicitacao_seq START WITH 1 INCREMENT BY 1 NOCYCLE;
 
 -- star siuanny tables
 CREATE TABLE Produtos (
-    id_produto INTEGER NOT NULL DEFAULT Produtos_seq.NEXTVAL,
-    nome VARCHAR(50) NOT NULL,
+    id_produto INTEGER DEFAULT Produtos_seq.NEXTVAL,
+    nome VARCHAR(50),
     descricao VARCHAR(500),
     margem_lucro DECIMAL(10,2),
     id_categoria INTEGER,
@@ -16,22 +16,22 @@ CREATE TABLE Produtos (
 );
 
 CREATE TABLE Categorias (
-    id_categoria INTEGER NOT NULL DEFAULT Categorias_seq.NEXTVAL,
+    id_categoria INTEGER DEFAULT Categorias_seq.NEXTVAL,
     nome VARCHAR(50)
 );
 
 CREATE TABLE Marcas (
-    id_marca INTEGER NOT NULL DEFAULT Marcas_seq.NEXTVAL,
+    id_marca INTEGER DEFAULT Marcas_seq.NEXTVAL,
     nome VARCHAR(50)
 );
 
 CREATE TABLE Solicitacao (
-    id_solicitacao INTEGER NOT NULL DEFAULT Solicitacao_seq.NEXTVAL,
-    data_solicitacao DATE NOT NULL,
-    data_prevista DATE NOT NULL,
-    data_entrega DATE NOT NULL,
+    id_solicitacao INTEGER  DEFAULT Solicitacao_seq.NEXTVAL,
+    data_solicitacao DATE,
+    data_prevista DATE,
+    data_entrega DATE,
     valor_compra DECIMAL(10,2),
-    prazo_pagamento DATE NOT NULL,
+    prazo_pagamento DATE,
     id_filial INTEGER,
     cnpj_fonecedor CHAR(14)
 );
