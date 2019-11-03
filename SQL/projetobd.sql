@@ -122,3 +122,78 @@ ALTER TABLE ordemCompras ADD CONSTRAINT caixaRefIdCaixa
     FOREIGN KEY(id_caixa) REFERENCES caixas(num_caixas)
   INITIALLY DEFERRED DEFERRABLE
 --end Beatriz constraints
+
+-- start mariana tables 
+
+CREATE TABLE funcionarios (
+    matricula CHAR(9) PRIMARY KEY,
+    cpf CHAR(11) NOT NULL,
+    rg CHAR(7) NOT NULL,
+    nome VARCHAR(50) NOT NULL,
+    endereco VARCHAR(200),
+    salario NUMBER(9,2),
+    funcao VARCHAR(40),
+    id_filial CHAR(9),
+    gerente VARCHAR(50),
+    
+    FOREIGN KEY (id_filial) REFERENCES filial(id_filial)
+);
+
+
+CREATE TABLE telefones_funcionarios (
+    mat_funcionario CHAR(9),
+    telefone CHAR(9),
+    PRIMARY KEY (mat_funcionario, telefone)
+
+);
+
+
+CREATE TABLE fornecedores (
+    cnpj_id CHAR(14) PRIMARY KEY,
+    nome VARCHAR(50) NOT NULL,
+    endereco VARCHAR(200),
+    email VARCHAR(40),
+    site VARCHAR(30),
+    id_categoria SERIAL()
+
+);
+
+
+CREATE TABLE telefones_fornecedores (
+    cnpj_fornecedor CHAR(14),
+    telefone CHAR(9)
+    PRIMARY KEY (cnpj_fornecedor, telefone)
+
+);
+
+CREATE TABLE dependente (
+    cpf CHAR(11) PRIMARY KEY,
+    data_nasc DATE,
+    mat_funcionario CHAR(9),
+    nome VARCHAR(50) NOT NULL
+
+);
+
+-- end mariana tables
+
+-- start mariana constraints
+
+ALTER TABLE funcionarios ADD CONSTRAINT PK_matricula PRIMARY KEY (matricula);
+
+ALTER TABLE telefones_funcionarios ADD CONSTRAINT PK_telefones_funcionarios PRIMARY KEY (mat_funcionario, telefone);
+
+ALTER TABLE fornecedores ADD CONSTRAINT PK_cnpj_id PRIMARY KEY (cnpj_id);
+
+ALTER TABLE telefones_fornecedores ADD CONSTRAINT PK_cnpj_fornecedor PRIMARY KEY (cnpj_fornecedor, telefone);
+
+ALTER TABLE dependente ADD CONSTRAINT PK_cpf PRIMARY KEY (cpf);
+
+ALTER TABLE fornecedores ADD CONSTRAINT FK_ig_categoria FOREIGN KEY (id_categoria) REFERENCES Categorias(id_categoria);
+
+ALTER TABLE telefones_fornecedores ADD CONSTRAINT FK_cnpj_fornecedor FOREIGN KEY (cnpj_fornecedor) REFERENCES fornecedores(cnpj);
+
+ALTER TABLE dependente ADD CONSTRAINT FK_matricula FOREIGN KEY (matricula) REFERENCES funcionarios(matricula);
+
+ALTER TABLE funcionarios ADD CONSTRAINT FK_id_filial FOREIGN KEY (id_filial) REFERENCES filiais(id_filial);
+
+-- end mariana constraints
