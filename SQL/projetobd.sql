@@ -1,11 +1,11 @@
--- star siuanny sequences
+-- start siuanny sequences
 CREATE SEQUENCE Produtos_seq START WITH 1 INCREMENT BY 1 NOCYCLE;
 CREATE SEQUENCE Categorias_seq START WITH 1 INCREMENT BY 1 NOCYCLE;
 CREATE SEQUENCE Marcas_seq START WITH 1 INCREMENT BY 1 NOCYCLE;
 CREATE SEQUENCE Solicitacao_seq START WITH 1 INCREMENT BY 1 NOCYCLE;
 -- end siuanny sequences
 
--- star siuanny tables
+-- start siuanny tables
 CREATE TABLE Produtos (
     id_produto INTEGER DEFAULT Produtos_seq.NEXTVAL,
     nome VARCHAR(50),
@@ -55,8 +55,6 @@ ALTER TABLE Solicitacao ADD CONSTRAINT FK_Solicitacao_Fornecedores FOREIGN KEY (
 --start beatriz sequences
 CREATE SEQUENCE caixas_seq 
     START WITH 1 INCREMENT BY 1 NOCYCLE;
-
-
 --end beatriz sequences
 
 --start beatriz tables
@@ -107,9 +105,6 @@ ALTER TABLE enderecos ADD CONSTRAINT PK_enderecos
 ALTER TABLE ordemCompras ADD CONSTRAINT PK_ordemCompras 
     PRIMARY KEY (nota_fiscal);
 
-
-
-
 ALTER TABLE telefonesClientes ADD CONSTRAINT TelefonesClientesREFcpfCliente 
     FOREIGN KEY(cpf_cliente) REFERENCES clientes(cpf)
 INITIALLY DEFERRED DEFERRABLE
@@ -122,3 +117,65 @@ ALTER TABLE ordemCompras ADD CONSTRAINT caixaRefIdCaixa
     FOREIGN KEY(id_caixa) REFERENCES caixas(num_caixas)
   INITIALLY DEFERRED DEFERRABLE
 --end Beatriz constraints
+
+-- starts Guilherme sequences
+CREATE SEQUENCE Equipamentos_seq START WITH 1 INCREMENT BY 1 NOCYCLE;
+-- ends Guilherme sequences 
+
+-- starts Guilherme tables
+CREATE TABLE filiais (
+    id_filial CHAR(9),
+    nome VARCHAR(50),
+    endereco VARCHAR(200),
+    telefone VARCHAR(13),
+    id_gerente CHAR(9)
+);
+
+CREATE TABLE nota_fiscal (
+    numero_nota_fiscal CHAR(9) UNIQUE,
+    cnpj CHAR(14),
+    quantidade INTEGER,
+    data DATE,
+    valor_item DECIMAL(10, 2),
+    id_solicitacao INTEGER
+);
+
+CREATE TABLE equipamentos (
+    id_equipamento INTEGER DEFAULT Equipamentos_seq.NEXTVAL,
+    descricao VARCHAR(500),
+    num_caixa INTEGER,
+);
+
+CREATE TABLE reclamacao (
+    cpf_cliente CHAR(11),
+    id_filial_reclamacao CHAR(9),
+    data_hora TIMESTAMP,
+    descricao VARCHAR(500),
+);
+
+CREATE TABLE manutencao (
+    id_equipamento INTEGER,
+    mat_funcionario CHAR(9),
+    data_hora TIMESTAMP,
+    custo DECIMAL(10, 2)
+);
+-- ends Guilherme tables
+
+-- start Guilherme constraints
+ALTER TABLE filiais ADD CONSTRAINT PK_filiais  PRIMARY KEY (id_filial);
+ALTER TABLE filiais ADD CONSTRAINT FK_filiais_gerente FOREIGN KEY (id_gerente) REFERENCES Funcionarios(mat_funcionario);
+
+ALTER TABLE nota_fiscal ADD CONSTRAINT PK_nota_fiscal PRIMARY KEY (numero_nota_fiscal); 
+ALTER TABLE nota_fiscal ADD CONSTRAINT FK_nota_fical_solicitacao FOREIGN KEY (id_solicitacao) REFERENCES Solicitacao(id_solicitacao);
+
+ALTER TABLE equipamentos ADD CONSTRAINT PK_equimamentos PRIMARY KEY (id_equipamento);
+ALTER TABLE equipamentos ADD CONSTRAINT FK_equipamentos_num_caixa FOREIGN KEY (num_caixa) REFERENCES caixas(num_caixa);
+
+ALTER TABLE reclamacao ADD CONSTRAINT PK_reclamacao PRIMARY KEY (cpf, id_filial_reclamacao);
+ALTER TABLE reclamacao ADD CONSTRAINT FK_reclamacao_cliente FOREIGN KEY (cpf_cliente) REFERENCES Clientes(cpf_cliente);
+ALTER TABLE reclamacao ADD CONSTRAINT FK_reclamacao_filial FOREIGN KEY (id_filial_reclamacao) REFERENCES filiais(id_filial); 
+
+ALTER TABLE manutencao ADD CONSTRAINT PK_manutencao PRIMARY KEY (id_equipamento, mat_funcionario);
+ALTER TABLE manutencao ADD CONSTRAINT FK_manutencao_equipamento FOREIGN KEY (id_equipamento) REFERENCES equipamentos(id_equipamento);
+ALTER TABLE manutencao ADD CONSTRAINT FK_manutencao_funcionario FOREIGN KEY (mat_funcionario) REFERENCES Funcionarios(mat_funcionario);
+-- ends Guilherme constraints
