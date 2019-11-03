@@ -53,24 +53,27 @@ ALTER TABLE Solicitacao ADD CONSTRAINT FK_Solicitacao_Fornecedores FOREIGN KEY (
 -- end siuanny constraints
 
 --start beatriz sequences
+CREATE SEQUENCE caixas_seq 
+    START WITH 1 INCREMENT BY 1 NOCYCLE;
+
+
 --end beatriz sequences
 
 --start beatriz tables
 CREATE TABLE clientes(
-    cpf CHAR(11) PRIMARY KEY,
+    cpf CHAR(11),
     nome VARCHAR(50)NOT NULL,
     email VARCHAR(40),
-    pontos INT
+    pontos INTEGER
 )
 
 CREATE TABLE telefonesClientes(
     cpf_cliente CHAR(11),
-    telefone CHAR(9),
-    PRIMARY KEY(cpf_cliente, telefone)
+    telefone CHAR(9)
 )
 
 CREATE TABLE enderecos(
-    cpf_cliente CHAR(11) PRIMARY KEY,
+    cpf_cliente CHAR(11),
     rua VARCHAR(100) NOT NULL,
     numero VARCHAR(4),
     bairro VARCHAR(30) NOT NULL,
@@ -79,19 +82,34 @@ CREATE TABLE enderecos(
 )
 
 CREATE TABLE ordemCompras(
-    nota_fiscal CHAR(44) PRIMARY KEY,
+    nota_fiscal CHAR(44),
     data_compra DATE, 
-    id_caixa CHAR(9),
+    id_caixa INTEGER,
     cpf_cliente CHAR(9)
 )
 
 CREATE TABLE caixas(
-    num_caixas CHAR(9) PRIMARY KEY,
+    num_caixas INTEGER DEFAULT caixas_seq.NEXTVAL,
     num_filial CHAR(9) NOT NULL
 )
 --end beatriz tables
 
 --start beatriz constraints
+ALTER TABLE clientes ADD CONSTRAINT PK_cliente 
+    PRIMARY KEY (cpf);
+
+ALTER TABLE telefonesClientes ADD CONSTRAINT PK_telefonesClientes
+    PRIMARY KEY (cpf_cliente, telefone);
+
+ALTER TABLE enderecos ADD CONSTRAINT PK_enderecos
+    PRIMARY KEY (cpf_cliente);
+
+ALTER TABLE ordemCompras ADD CONSTRAINT PK_ordemCompras 
+    PRIMARY KEY (nota_fiscal);
+
+
+
+
 ALTER TABLE telefonesClientes ADD CONSTRAINT TelefonesClientesREFcpfCliente 
     FOREIGN KEY(cpf_cliente) REFERENCES clientes(cpf)
 INITIALLY DEFERRED DEFERRABLE
