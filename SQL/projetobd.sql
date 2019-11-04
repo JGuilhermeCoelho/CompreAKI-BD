@@ -85,13 +85,14 @@ CREATE TABLE ordemCompras(
     nota_fiscal CHAR(44),
     data_compra DATE, 
     id_caixa INTEGER,
-    cpf_cliente CHAR(9)
+    cpf_cliente CHAR(11)
 )
 
 CREATE TABLE caixas(
     num_caixas INTEGER DEFAULT caixas_seq.NEXTVAL,
     num_filial CHAR(9) NOT NULL
 )
+
 --end beatriz tables
 
 --start beatriz constraints
@@ -107,8 +108,7 @@ ALTER TABLE enderecos ADD CONSTRAINT PK_enderecos
 ALTER TABLE ordemCompras ADD CONSTRAINT PK_ordemCompras 
     PRIMARY KEY (nota_fiscal);
 
-
-
+-- foreign keys -- 
 
 ALTER TABLE telefonesClientes ADD CONSTRAINT TelefonesClientesREFcpfCliente 
     FOREIGN KEY(cpf_cliente) REFERENCES clientes(cpf)
@@ -121,4 +121,17 @@ INITIALLY DEFERRED DEFERRABLE
 ALTER TABLE ordemCompras ADD CONSTRAINT caixaRefIdCaixa
     FOREIGN KEY(id_caixa) REFERENCES caixas(num_caixas)
   INITIALLY DEFERRED DEFERRABLE
+
+ALTER TABLE ordemCompras ADD CONSTRAINT notasREFNotasFiscais
+    FOREIGN KEY(nota_fiscal) REFERENCES nota_fiscal(numero_nota_fiscal)
+INITIALLY DEFERRED DEFERRABLE
+
+ALTER TABLE ordemCompras ADD CONSTRAINT clientesREFcpf
+    FOREIGN KEY(cpf_cliente) REFERENCES clientes(cpf)
+INITIALLY DEFERRED DEFERRABLE
+
+ALTER TABLE caixas ADD CONSTRAINT filiaisREFNumFiliais
+    FOREIGN KEY(num_filial) REFERENCES filiais(id_filial)
+INITIALLY DEFERRED DEFERRABLE
+
 --end Beatriz constraints
